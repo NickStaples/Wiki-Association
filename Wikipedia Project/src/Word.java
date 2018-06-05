@@ -17,18 +17,18 @@ import org.json.simple.parser.ParseException;
 
 public class Word {
 	//Instance Variables, might need to cut some of these down
-	String word;
+	private String word;
 	//OsArray is the parsed jsonArray associated with the open search wiki link, which gives us Similar pages and their descriptions
-	JSONArray jsonOsArray;
+	private JSONArray jsonOsArray;
 	//PageArray is the parsed jsonArray associated with the actual wikipedia page itself and its content.
-	JSONObject jsonPageObject;
+	private JSONObject jsonPageObject;
 	//The JSONArray we store the wikipedia page contents in. Extracted from jsonPageObject
 	JSONArray wikipageArray;
 	
 	File jsonOsFile;
 	File jsonPageFile;
 	
-	JParser jparse;
+	private JParser jparse;
 	ArrayList<String> relPageStrings;
 	ArrayList<String> relPageDesc;
 	ArrayList<String> pageKeywords;
@@ -38,8 +38,8 @@ public class Word {
 		word = s;
 		jsonOsFile = downloadJSON("https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=");
 		jsonPageFile = downloadJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=");
-		jsonOsArray = (JSONArray)(new JSONParser().parse(new FileReader(this.word + "_opensearch")));
-		jsonPageObject = (JSONObject) (new JSONParser().parse(new FileReader(this.word + "_wikipage")));
+		jsonOsArray = (JSONArray)(new JSONParser().parse(new FileReader("JSON/" + this.word + "_opensearch.json")));
+		jsonPageObject = (JSONObject) (new JSONParser().parse(new FileReader("JSON/" + this.word + "_wikipage.json")));
 		
 		//At this point, we have downloaded and saved our OpenSearch.json and Wikipage.json accordingly. 
 		
@@ -76,14 +76,14 @@ public class Word {
 	}
 	
 	//Takes a single argument 
-	public File downloadJSON(String urlString) throws IOException {
+	private File downloadJSON(String urlString) throws IOException {
 		String filename = "";
 		
 		//We choose to name the files as word_opensearch and word_wikipage, referring to the two File objects representing the JSONs we downloaded.
 		if(urlString.contains("search")) {
-			filename = this.word + "_opensearch";
+			filename = "JSON/" + this.word + "_opensearch.json";
 		} else {
-			filename = this.word + "_wikipage";
+			filename = "JSON/" + this.word + "_wikipage.json";
 		}
 		
 		//Constructing the File toReturn with the appropriate filename as checked above.
@@ -97,9 +97,15 @@ public class Word {
 		
 		//Write the bytes recieved from wikipedia's response to us opening a datastream
 		ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-		FileOutputStream fos = new FileOutputStream(toReturn);
-		fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-		fos.close();
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(toReturn);
+			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return toReturn;
 	}
@@ -108,6 +114,16 @@ public class Word {
 	
 	public String[] getArray() {
 		return null;
+	}
+	
+	public ArrayList<String> getKeywords() {
+		return pageKeywords;
+	}
+	public String toString() {
+		return this.word + "\t# Keywords: " + pageKeywords.size();
+	}
+	public String getWord() {
+		return word;
 	}
 	
 	public void printRelatedPages() {

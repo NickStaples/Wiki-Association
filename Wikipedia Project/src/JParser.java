@@ -93,7 +93,11 @@ public class JParser {
 		
 		//The "pages" portion of the object, will have a keyset with only one entry, an arbitrary integer used as an ID. We need to get that key so we can search
 		//For that specific key while using the get() method.
-		Set<Object> keySet = objectTwo.keySet();
+		Set<Object> keySet = null;
+		JSONArray pageContents = null;
+		if(objectTwo != null) {
+			keySet = objectTwo.keySet();
+		
 		//System.out.println("Pages keyset: " + keySet);
 		//objectOne = objectTwo.get();
 		
@@ -106,13 +110,17 @@ public class JParser {
 		
 		//Next we look for the revisions key in the JSONObject, saving it back to Object two
 		//objectTwo = (JSONObject) objectOne.get("revisions");	//So it turns out the sub-object at key("revisions") is a JSONArray containing the page data.
-		JSONArray pageContents = (JSONArray) objectOne.get("revisions");
-		
+			pageContents = (JSONArray) objectOne.get("revisions");
+		}
 		//Now we have pageContexts as our JSONArray.
 		return pageContents;
 	}
 	
 	public ArrayList<String> getKeysOnPage(JSONArray ja){
+		if(ja == null) {
+			ArrayList<String> newList = new ArrayList<>();
+			return newList;
+		}
 		ArrayList<String> toReturn = new ArrayList<String>();
 		String contents = ja.toJSONString();
 		//System.out.println("Contents of string: " + contents);
@@ -155,11 +163,11 @@ public class JParser {
 		//Clean up the contents, get rid of anything with word "language" "File"
 		for(int i = toReturn.size() - 1; i >= 0; i--) {
 			String current = toReturn.get(i);
-			if(current.contains("language") || current.contains("File")) {
+			if(current.contains("language") || current.contains("File") || current.contains("\\") || current.contains(":")) {
 				toReturn.remove(i);
 				continue;
 			}
-			if(current.charAt(0) == 'F' && current.charAt(1) == 'i' && current.charAt(2) == 'l' && current.charAt(3) == 'e') {
+			if(current.length() > 3 && current.charAt(0) == 'F' && current.charAt(1) == 'i' && current.charAt(2) == 'l' && current.charAt(3) == 'e') {
 				toReturn.remove(i);
 				continue;
 			}
