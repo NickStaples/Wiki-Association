@@ -37,7 +37,9 @@ public class Word {
 	public Word(String s) throws FileNotFoundException, IOException, ParseException {
 		word = s;
 		jsonOsFile = downloadJSON("https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=");
+		jsonOsFile.deleteOnExit();
 		jsonPageFile = downloadJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=");
+		jsonPageFile.deleteOnExit();
 		jsonOsArray = (JSONArray)(new JSONParser().parse(new FileReader("JSON/" + this.word + "_opensearch.json")));
 		jsonPageObject = (JSONObject) (new JSONParser().parse(new FileReader("JSON/" + this.word + "_wikipage.json")));
 		
