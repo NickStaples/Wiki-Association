@@ -15,6 +15,10 @@ public class Algorithm {
 	
 	//This method will accept a corpus, a word object and a string w, and calculate its score based on the term frequency inverse 
 	//document frequency method, Wiki for more details on how to compute this.
+	
+	//A "Word" object, is actually a "Page" of wikipedia, bad naming choice I guess. It contains a lot of info about a certain page
+	//once its been parsed from the json. The string w is the word we are trying to score and page is the page we want to see if its
+	//Relevant to.
 	public int TFIDF(Corpus c, Word page, String w) {
 		//Find a way to count instances of w in page keywords, divided by the amount of times it appears across all pages.
 		
