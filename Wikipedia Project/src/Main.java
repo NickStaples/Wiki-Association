@@ -19,33 +19,31 @@ public class Main {
 		
 		//Array to keep track of Words being dealt with
 		ArrayList<Word> wordArray = new ArrayList<>();
-		Corpus corp = new Corpus();
-		Queue<String> queue = new LinkedList();
-		Set<String> n = corp.getNouns();
 		
-		//Grabbing the word we want to work with.
-		System.out.print("Enter a word you'd like to process: ");
+		System.out.print("Enter in a word: ");
 		Scanner sc = new Scanner(System.in);
 		String answer = sc.nextLine();
-		System.out.println();
 		
-		//Should experiment with trying to keep the files in memory rather than saving them to the hard drive. Each word will need its associated file I guess.
+		//Construct corpus from local Files, loading stored data into program data.
+		Corpus corp = new Corpus();
+		
 		Word root = new Word(answer);
-		//queue.addAll(n);
+		ArrayList<String> keys = root.getKeywords();
 		
-		for(int i = 0; i < 10000; i++) {
-			if(!queue.isEmpty()) {
-				String currString = queue.remove();
-				//If this page hasn't been added to the corpus, add it and queue its keywords
-				if(!corp.containsPage(currString) && corp.isNoun(currString)) {
-					Word newWord = new Word(currString);
-					queue.addAll(newWord.getKeywords());
-					corp.addPage(newWord);
-					wordArray.add(newWord);
-				}
+		Queue<String> queue = new LinkedList();
+		queue.addAll(root.getKeywords());
+		for(int i = 0; i < 100; i++) {
+			String curr = queue.remove();
+			if(corp.isNoun(curr)) {
+				Word w = new Word(curr);
+				corp.addPage(w);
 			}
 		}
+		
+		corp.printPages();
+		corp.printMap();		
 		corp.finalizeAddition();
+
 		System.out.println("Number of words in corpus: " + corp.getTotalWordCount());
 		System.out.println("Number of pages in corpus: " + corp.getPageCount());
 		
