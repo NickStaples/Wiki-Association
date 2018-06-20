@@ -34,7 +34,7 @@ public class Corpus {
 	
 	//Keyword map representing database as (key,val,val) tuple. Represented as a <String1, String2> with String1="content"
 	//and String2 = "val, val" all separated with "|".	Looks something like "string | 10 | 2"
-	Map<String, Integer> keywordMap = new HashMap<String, Integer>();
+	HashMap<String, Integer> keywordMap = new HashMap<String, Integer>();
 	
 	//While loading in keywordMap, count the second parameter into this local variable.
 	private int wordCount;
@@ -100,7 +100,7 @@ public class Corpus {
 		
 		//Add the page to the storedPages file.
 		existingPages.add(w.getWord());
-		//FileOutputStream fos = new FileOutputStream(storedPages);
+
 		BufferedWriter bw = new BufferedWriter(new FileWriter(storedPages, true));
 		bw.append(w.getWord());
 		bw.newLine();
@@ -127,7 +127,6 @@ public class Corpus {
 	}
 	
 	public void finalizeAddition() throws IOException {
-		//fos = new FileOutputStream(storedKeywords);
 		PrintWriter writer = new PrintWriter("Corpus/storedKeywords.txt");
 		writer.print("");
 		writer.close();
@@ -158,6 +157,9 @@ public class Corpus {
 			Map.Entry pair = (Map.Entry)it.next();
 			System.out.println(pair.getKey() + " = " + pair.getValue());
 		}
+	}
+	public HashMap<String, Integer> getMap() {
+		return keywordMap;
 	}
 	public int getPageCount() {
 		return existingPages.size();

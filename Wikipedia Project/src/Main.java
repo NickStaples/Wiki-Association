@@ -1,7 +1,10 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
@@ -32,20 +35,42 @@ public class Main {
 		
 		Queue<String> queue = new LinkedList();
 		queue.addAll(root.getKeywords());
-		for(int i = 0; i < 100; i++) {
+		for(int i = 0; i < 30; i++) {
 			String curr = queue.remove();
 			if(corp.isNoun(curr)) {
 				Word w = new Word(curr);
+				queue.addAll(w.getKeywords());
 				corp.addPage(w);
+			}
+			if(queue.isEmpty()) {
+				break;
 			}
 		}
 		
-		corp.printPages();
-		corp.printMap();		
-		corp.finalizeAddition();
+		//corp.printPages();
+		//corp.printMap();		
 
 		System.out.println("Number of words in corpus: " + corp.getTotalWordCount());
 		System.out.println("Number of pages in corpus: " + corp.getPageCount());
+		
+		System.out.println("Most common word: ");
+		
+		HashMap<String, Integer> corpMap = corp.getMap();
+		System.out.println(corpMap.keySet());
+		Iterator it = corpMap.entrySet().iterator();
+		int highestVal = 0;
+		String highestKey = "";
+		while(it.hasNext()) {
+			Map.Entry pair = (Map.Entry)it.next();
+			System.out.println(pair.getKey() + " = " + pair.getValue());
+			if((Integer)pair.getValue() > highestVal) {
+				highestVal = (int)pair.getValue();
+				highestKey = (String) pair.getKey();
+			}
+		}
+		System.out.println(highestKey + ", " + highestVal);
+		corp.finalizeAddition();
+		
 		
 	}
 

@@ -52,28 +52,7 @@ public class Word {
 		//Retrieves all of the words on the wiki page. Still requires parsing into readable data. Pages are denoted by [[ ]] surrounding them.
 		wikipageArray = jparse.getPageContents(jsonPageObject);
 		
-		//System.out.println(wikipageArray.size());
-		
 		pageKeywords = jparse.getKeysOnPage(wikipageArray);
-		//System.out.println("keyword count: " + pageKeywords.size());
-		
-//		for(int i = 0; i < pageKeywords.size(); i++) {
-//			if(i % 5 == 0) {
-//				System.out.println();
-//			}
-//			System.out.print(pageKeywords.get(i) + ", ");
-//		}
-		
-//		
-//		System.out.println(jsonPageObject.size());
-//		
-//		Set<Object> tmp = jsonPageObject.keySet();
-//		System.out.println(tmp + "\n\n");
-//		
-//		JSONObject newObj = (JSONObject) jsonPageObject.get("query");
-//		Set<Object> tmp2 = newObj.keySet();
-//		System.out.println(tmp2);
-//		
 		
 	}
 	
