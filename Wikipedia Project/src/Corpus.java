@@ -188,6 +188,18 @@ public class Corpus {
 			System.out.println(pair.getKey() + " = " + pair.getValue());
 		}
 	}
+	public int getCount(String s) {
+		String value = keywordMap.get(s);
+		int index = value.indexOf("|");
+		return Integer.parseInt(value.substring(0, index - 1));
+	}
+	
+	public int getDocCount(String s) {
+		String value = keywordMap.get(s);
+		int index = value.indexOf("|");
+		return Integer.parseInt(value.substring(index + 2));
+	}
+	
 	public HashMap<String, String> getMap() {
 		return keywordMap;
 	}

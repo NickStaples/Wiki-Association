@@ -35,7 +35,7 @@ public class Main {
 		
 		Queue<String> queue = new LinkedList();
 		queue.addAll(root.getKeywords());
-		for(int i = 0; i < 30; i++) {
+		for(int i = 0; i < 3000; i++) {
 			String curr = queue.remove();
 			if(corp.isNoun(curr)) {
 				Word w = new Word(curr);

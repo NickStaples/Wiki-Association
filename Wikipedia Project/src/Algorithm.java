@@ -19,17 +19,24 @@ public class Algorithm {
 	//A "Word" object, is actually a "Page" of wikipedia, bad naming choice I guess. It contains a lot of info about a certain page
 	//once its been parsed from the json. The string w is the word we are trying to score and page is the page we want to see if its
 	//Relevant to.
-	public int TFIDF(Corpus c, Word page, String w) {
-		//Find a way to count instances of w in page keywords, divided by the amount of times it appears across all pages.
+	public double TFIDF(Corpus c, Word page, String w) {
+
+		ArrayList<String> keywords = page.getKeywords();
+		int timesInDoc = 0;
+		int numWordsInDoc = keywords.size();
+		for(String s : keywords) {
+			if(s.equalsIgnoreCase(w)) {
+				timesInDoc++;
+			}
+		}
+		double tf = (double)timesInDoc / numWordsInDoc;
 		
-		//Corpuses have a Map that holds all of the keywords and times they appear. Might want to write a getter method in Corpus
-		//That accepts a word and retrieves the value stored in its "ExistingKeywords" map. By using existingKeywords.getKey or whatever
+		int totalNumDocs = c.getPageCount();
+		int numDocsWithWord = c.getDocCount(w);
 		
-		//Word objects have a public ArrayList<String> getKeywords() method to retreive all the keywords in that words page.
+		double idf = Math.log((double)totalNumDocs / numDocsWithWord);
 		
-		//After that just do the calculation and return it.
-		
-		return 0;
+		return tf * idf;
 	}
 
 }
