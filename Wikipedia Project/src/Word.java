@@ -37,7 +37,9 @@ public class Word {
 	public Word(String s) throws FileNotFoundException, IOException, ParseException {
 		word = s;
 		jsonOsFile = downloadJSON("https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=");
+		jsonOsFile.deleteOnExit();
 		jsonPageFile = downloadJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=json&titles=");
+		jsonPageFile.deleteOnExit();
 		jsonOsArray = (JSONArray)(new JSONParser().parse(new FileReader("JSON/" + this.word + "_opensearch.json")));
 		jsonPageObject = (JSONObject) (new JSONParser().parse(new FileReader("JSON/" + this.word + "_wikipage.json")));
 		
@@ -50,28 +52,7 @@ public class Word {
 		//Retrieves all of the words on the wiki page. Still requires parsing into readable data. Pages are denoted by [[ ]] surrounding them.
 		wikipageArray = jparse.getPageContents(jsonPageObject);
 		
-		//System.out.println(wikipageArray.size());
-		
 		pageKeywords = jparse.getKeysOnPage(wikipageArray);
-		//System.out.println("keyword count: " + pageKeywords.size());
-		
-//		for(int i = 0; i < pageKeywords.size(); i++) {
-//			if(i % 5 == 0) {
-//				System.out.println();
-//			}
-//			System.out.print(pageKeywords.get(i) + ", ");
-//		}
-		
-//		
-//		System.out.println(jsonPageObject.size());
-//		
-//		Set<Object> tmp = jsonPageObject.keySet();
-//		System.out.println(tmp + "\n\n");
-//		
-//		JSONObject newObj = (JSONObject) jsonPageObject.get("query");
-//		Set<Object> tmp2 = newObj.keySet();
-//		System.out.println(tmp2);
-//		
 		
 	}
 	
