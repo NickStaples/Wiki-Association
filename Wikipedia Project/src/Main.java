@@ -32,10 +32,10 @@ public class Main {
 		
 		Word root = new Word(answer);
 		ArrayList<String> keys = root.getKeywords();
-		
+		//System.out.println(keys);
 		Queue<String> queue = new LinkedList();
 		queue.addAll(root.getKeywords());
-		for(int i = 0; i < 3000; i++) {
+		for(int i = 0; i < 30; i++) {
 			String curr = queue.remove();
 			if(corp.isNoun(curr)) {
 				Word w = new Word(curr);
@@ -53,25 +53,70 @@ public class Main {
 		System.out.println("Number of words in corpus: " + corp.getTotalWordCount());
 		System.out.println("Number of pages in corpus: " + corp.getPageCount());
 		
-		HashMap<String, String> corpMap = corp.getMap();
-		System.out.println(corpMap.keySet());
-		Iterator it = corpMap.entrySet().iterator();
-		int highestVal = 0;
-		String highestKey = "";
-		while(it.hasNext()) {
-			Map.Entry pair = (Map.Entry)it.next();
-			System.out.println(pair.getKey() + " = " + pair.getValue());
-			String val = (String) pair.getValue();
-			int index = val.indexOf("|");
-			int count = Integer.parseInt(val.substring(0, index - 1));
-			int docCount = Integer.parseInt(val.substring(index + 2));
-			if(count > highestVal) {
-				highestVal = count;
-				highestKey = (String) pair.getKey();
+//		HashMap<String, String> corpMap = corp.getMap();
+//		System.out.println(corpMap.keySet());
+//		Iterator it = corpMap.entrySet().iterator();
+//		int highestVal = 0;
+//		String highestKey = "";
+//		while(it.hasNext()) {
+//			Map.Entry pair = (Map.Entry)it.next();
+//			System.out.println(pair.getKey() + " = " + pair.getValue());
+//			String val = (String) pair.getValue();
+//			int index = val.indexOf("|");
+//			int count = Integer.parseInt(val.substring(0, index - 1));
+//			int docCount = Integer.parseInt(val.substring(index + 2));
+//			if(count > highestVal) {
+//				highestVal = count;
+//				highestKey = (String) pair.getKey();
+//			}
+//		}
+//		System.out.print("Most common word: ");
+//		System.out.println(highestKey + ", " + highestVal);
+//		
+		
+		Algorithm alg = new Algorithm();
+		HashMap<String, Double> tfidfMap = new HashMap<String, Double>();
+		ArrayList<String> newKeys = root.getKeywords();
+		System.out.println(newKeys);
+		for(String s : newKeys) {
+			if(corp.keywordMap.containsKey(s)) {
+				//System.out.println("HERE");
+				double score = alg.TFIDF(corp, root, s);
+				tfidfMap.put(s, score * 100);
 			}
 		}
-		System.out.print("Most common word: ");
-		System.out.println(highestKey + ", " + highestVal);
+		
+		ArrayList<String> sortedValues = new ArrayList<String>();
+		
+		while(tfidfMap.size() != 0) {
+			String smallKey = "";
+			double smallest = Double.MAX_VALUE;
+			Iterator tfIt = tfidfMap.entrySet().iterator();
+			while(tfIt.hasNext()) {
+				Map.Entry<String, Double> pair = (Map.Entry)tfIt.next();
+				if(pair.getValue() < smallest) {
+					smallKey = pair.getKey();
+					smallest = pair.getValue();
+				}
+			}
+			String newStr = smallKey + " : " + smallest;
+			sortedValues.add(newStr);
+			tfidfMap.remove(smallKey);
+		}
+		
+		for(int i = 0; i < sortedValues.size(); i++) {
+			System.out.println(sortedValues.get(i));
+		}
+		
+		System.out.println("TFIDF SCORE MAP: ");
+		Iterator tfIt = tfidfMap.entrySet().iterator();
+		while(tfIt.hasNext()) {
+			Map.Entry pair = (Map.Entry)tfIt.next();
+			System.out.println(pair.getKey() + " = " + pair.getValue());
+		}
+		
+		
+		
 		corp.finalizeAddition();
 		
 	}
